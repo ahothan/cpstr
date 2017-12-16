@@ -2,6 +2,7 @@ import shutil
 from optparse import OptionParser
 import requests
 import re
+import sys
 
 
 prefix='media_w1122970213_b862904_'
@@ -30,19 +31,24 @@ def breakdown_ts_url(url):
 def download_ts(output, prefix, start_index):
 	index = start_index
 	print 'downloading ' + prefix
+        total_len = 0
+        print 'Downloading...'
 
 	with open(output, 'wb') as dest:
 		while 1:
 			url = prefix + str(index) + '.ts'
-			print '   ' + str(index) + '...'
 			r = requests.get(url)
 			if r.status_code == requests.codes.ok:
+                                total_len += len(r.content)
+			        print '\r   %s MB...' % format(total_len/(1024*1024), ',d'),
+                                sys.stdout.flush()
 				dest.write(r.content)
 				index += 1
 			else:
 				break
 
-	print 'done'
+        print
+	print 'Done'
 
 
 def main():
@@ -61,7 +67,7 @@ def main():
     (options, args) = parser.parse_args()
     print options
     prefix, start_index = breakdown_ts_url(options.url)
-    download_ts(options.output + '.ts', prefix, start_index)
+    download_ts(options.output + '.mp4', prefix, start_index)
 
 
 if __name__ == '__main__':

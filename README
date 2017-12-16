@@ -1,0 +1,12 @@
+
+How to get the tapstream URL
+----------------------------
+Go to web page that shows video and play it then pause.
+Firefox, Tools | Web Developer | Network
+Click on All (or XHR) to locate the stream URL
+You should see the ts URL, e.g.
+http://host.com/.../..._108.ts
+
+Copy this URL and force the last index to be _1.ts
+
+python tapstream.py -o file.mp4 -u http://......_1.ts
