@@ -33,11 +33,18 @@ def download_ts(output, prefix, start_index):
 	print 'downloading ' + prefix
         total_len = 0
         print 'Downloading...'
+        timeouts = 0
 
 	with open(output, 'wb') as dest:
 		while 1:
 			url = prefix + str(index) + '.ts'
-			r = requests.get(url)
+                        try:
+			        r = requests.get(url, timeout=30)
+                        except Timeout:
+                                timeouts += 1
+			        print '\r   %s MB - Timed out! Retrying...' % format(total_len/(1024*1024), ',d'),
+                                print('Timed out! Retrying...')
+                                continue
 			if r.status_code == requests.codes.ok:
                                 total_len += len(r.content)
 			        print '\r   %s MB...' % format(total_len/(1024*1024), ',d'),
@@ -49,6 +56,8 @@ def download_ts(output, prefix, start_index):
 
         print
 	print 'Done'
+        if timeouts:
+               print('Timeouts: %d' % timeouts)
 
 
 def main():
