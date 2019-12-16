@@ -44,7 +44,6 @@ def download_ts(output, prefix, start_index):
                         except (Timeout, ConnectionError):
                                 timeouts += 1
 			        print '\r   %s MB - Timed out! Retrying...' % format(total_len/(1024*1024), ',d'),
-                                print('Timed out! Retrying...')
                                 continue
 			if r.status_code == requests.codes.ok:
                                 total_len += len(r.content)
