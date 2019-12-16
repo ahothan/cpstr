@@ -3,6 +3,7 @@ from optparse import OptionParser
 import requests
 import re
 import sys
+from requests.exceptions import ConnectionError, HTTPError, Timeout
 
 
 prefix='media_w1122970213_b862904_'
@@ -40,7 +41,7 @@ def download_ts(output, prefix, start_index):
 			url = prefix + str(index) + '.ts'
                         try:
 			        r = requests.get(url, timeout=30)
-                        except Timeout:
+                        except (Timeout, ConnectionError):
                                 timeouts += 1
 			        print '\r   %s MB - Timed out! Retrying...' % format(total_len/(1024*1024), ',d'),
                                 print('Timed out! Retrying...')
